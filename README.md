@@ -16,5 +16,5 @@ A full-stack web application for managing student events.
 
 ## Setup
 1. Clone the repo
-2. Run backend: `npm install && npm start`
+2. Run backend: `npm install && npm dev run`
 3. Run frontend: `npm install && npm start`
