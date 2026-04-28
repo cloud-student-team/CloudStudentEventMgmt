@@ -3,15 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-function MyEvents() {
-  return (
-    <div>
-      <h1>MY EVENTS TEST PAGE</h1>
-    </div>
-  );
-}
 
-export default MyEvents;
 
 function MyEvents() {
   const [events, setEvents] = useState([]);
