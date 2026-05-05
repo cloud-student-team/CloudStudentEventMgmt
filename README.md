@@ -1,2 +1,20 @@
-# CloudStudentEventMgmt
-The backend of the Cloud Student Event Management system is developed using Node.js and Express.js. It provides RESTful APIs for authentication, event management, user profile management, and event registrations. PostgreSQL is used as the database to store users, events, and registration records. JWT authentication is used to protect routes and manage secure user sessions. The backend receives requests from the React frontend, validates them, interacts with the database, and returns JSON responses to the client.
+# Cloud Student Event Management
+
+## Description
+A full-stack web application for managing student events.
+
+## Tech Stack
+- Frontend: React
+- Backend: Node.js, Express
+- Database: PostgreSQL
+
+## Features
+- User authentication (JWT)
+- Create and manage events
+- Event registration
+- Role-based access
+
+## Setup
+1. Clone the repo
+2. Run backend: `npm install && npm dev run`
+3. Run frontend: `npm install && npm start`
