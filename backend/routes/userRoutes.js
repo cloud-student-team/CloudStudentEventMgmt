@@ -1,7 +1,7 @@
 // backend/routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const bcryptjs = require('bcryptjs'); 
 const pool = require('../db');
 const authMiddleware = require('../middleware/authMiddleware');
 
@@ -47,7 +47,7 @@ router.put('/profile', authMiddleware, async (req, res) => {
     }
 
     if (password && password.trim() !== '') {
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcryptjs.hash(password, 10);
 
       const updatedUser = await pool.query(
         `UPDATE app_users
