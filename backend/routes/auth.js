@@ -1,5 +1,5 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
+const bcryptjs = require('bcryptjs'); 
 const jwt = require('jsonwebtoken');
 const pool = require('../config/db');
 require('dotenv').config();
@@ -19,7 +19,7 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'Email already registered' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(password, 10);
 
     const newUser = await pool.query(
       `INSERT INTO app_users (name, email, password, role)
@@ -54,7 +54,7 @@ router.post('/login', async (req, res) => {
     }
 
     const user = result.rows[0];
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcryptjs.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid email or password' });

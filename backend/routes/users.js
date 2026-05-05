@@ -1,7 +1,7 @@
 console.log('USERS ROUTE FILE LOADED');
 
 const express = require('express');
-const bcrypt = require('bcrypt');
+const bcryptjs = require('bcryptjs'); 
 const pool = require('../config/db');
 const authMiddleware = require('../middleware/authMiddleware');
 
@@ -54,13 +54,13 @@ router.put('/profile', authMiddleware, async (req, res) => {
         return res.status(400).json({ message: 'Current password required' });
       }
 
-      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      const isMatch = await bcryptjs.compare(currentPassword, user.password);
 
       if (!isMatch) {
         return res.status(400).json({ message: 'Incorrect current password' });
       }
 
-      updatedPassword = await bcrypt.hash(newPassword, 10);
+      updatedPassword = await bcryptjs.hash(newPassword, 10);
     }
 
     const updatedUser = await pool.query(
