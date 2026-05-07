@@ -12,7 +12,7 @@ function MyRegistrations() {
 
   const fetchMyRegistrations = async () => {
     try {
-      const res = await axios.get('${API_URL}/registrations/my/events', {
+      const res = await axios.get(`${API_URL}/registrations/my/events`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

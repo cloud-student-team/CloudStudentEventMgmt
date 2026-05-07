@@ -127,7 +127,7 @@ function CreateEvent() {
         data.append('poster', poster);
       }
 
-      await axios.post('${API_URL}/events', data, {
+      await axios.post(`${API_URL}/events`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',

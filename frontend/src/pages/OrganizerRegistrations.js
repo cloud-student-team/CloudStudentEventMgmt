@@ -28,7 +28,7 @@ function OrganizerRegistrations() {
         return;
       }
 
-      const res = await axios.get('${API_URL}/registrations/organizer/all', {
+      const res = await axios.get(`${API_URL}/registrations/organizer/all`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

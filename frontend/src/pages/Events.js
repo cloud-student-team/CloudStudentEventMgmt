@@ -23,7 +23,7 @@ function Events() {
 
   const fetchEvents = async () => {
     try {
-      const res = await axios.get('${API_URL}/events');
+      const res = await axios.get(`${API_URL}/events`);
       setEvents(res.data);
     } catch (error) {
       console.error(error);
@@ -38,7 +38,7 @@ function Events() {
         setJoinedEventIds([]);
         return;
       }
-      const res = await axios.get('${API_URL}/registrations/my/events', {
+      const res = await axios.get(`${API_URL}/registrations/my/events`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setJoinedEventIds(res.data.map((event) => event.id));
