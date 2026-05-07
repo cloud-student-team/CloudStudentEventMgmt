@@ -23,7 +23,7 @@ function Register() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('${API_URL}/auth/register', formData);
+      const response = await axios.post(`${API_URL}/auth/register`, formData);
       toast.success(response.data.message || '🎉 Registration successful!');
       setFormData({
         name: '',

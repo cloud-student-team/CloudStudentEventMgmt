@@ -21,7 +21,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const res = await axios.post('${API_URL}/auth/login', formData);
+      const res = await axios.post(`${API_URL}/auth/login`, formData);
       sessionStorage.setItem('token', res.data.token);
       sessionStorage.setItem('user', JSON.stringify(res.data.user));
       toast.success('✅ Login successful');

@@ -42,7 +42,7 @@ function EventDetails() {
         if (!token) return;
 
         const res = await axios.get(
-          '${API_URL}/registrations/my/events',
+          `${API_URL}/registrations/my/events`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
