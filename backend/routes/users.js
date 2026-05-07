@@ -1,5 +1,3 @@
-console.log('USERS ROUTE FILE LOADED');
-
 const express = require('express');
 const bcryptjs = require('bcryptjs'); 
 const pool = require('../config/db');
