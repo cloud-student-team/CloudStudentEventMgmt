@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../config/api';
 
 function Profile() {
   const [formData, setFormData] = useState({
@@ -21,7 +22,7 @@ function Profile() {
         navigate('/login');
         return;
       }
-      const res = await axios.get('http://localhost:5001/api/users/profile', {
+      const res = await axios.get('${API_URL}/users/profile', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setFormData((prev) => ({
@@ -48,7 +49,7 @@ function Profile() {
     e.preventDefault();
     try {
       const token = sessionStorage.getItem('token');
-      const res = await axios.put('http://localhost:5001/api/users/profile', formData, {
+      const res = await axios.put('${API_URL}/users/profile', formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       sessionStorage.setItem('user', JSON.stringify(res.data.user));

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import API_URL from '../config/api';
 
 function MyRegistrations() {
   const [registrations, setRegistrations] = useState([]);
@@ -11,7 +12,7 @@ function MyRegistrations() {
 
   const fetchMyRegistrations = async () => {
     try {
-      const res = await axios.get('http://localhost:5001/api/registrations/my/events', {
+      const res = await axios.get('${API_URL}/registrations/my/events', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -32,7 +33,7 @@ function MyRegistrations() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`http://localhost:5001/api/registrations/${eventId}`, {
+      await axios.delete(`${API_URL}/registrations/${eventId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

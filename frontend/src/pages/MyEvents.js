@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import API_URL from '../config/api';
 
 
 
@@ -22,7 +23,7 @@ function MyEvents() {
         }
 
         const res = await axios.get(
-          'http://localhost:5001/api/registrations/my/events',
+          '${API_URL}/registrations/my/events',
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -48,7 +49,7 @@ function MyEvents() {
   const cancelRegistration = async (eventId) => {
     try {
       await axios.delete(
-        `http://localhost:5001/api/registrations/${eventId}`,
+        `${API_URL}/registrations/${eventId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

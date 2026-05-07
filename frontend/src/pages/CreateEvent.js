@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import API_URL from '../config/api';
 
 function CreateEvent() {
   const [formData, setFormData] = useState({
@@ -126,7 +127,7 @@ function CreateEvent() {
         data.append('poster', poster);
       }
 
-      await axios.post('http://localhost:5001/api/events', data, {
+      await axios.post('${API_URL}/events', data, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',

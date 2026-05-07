@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import API_URL from '../config/api';
 
 function Participants() {
   const { eventId } = useParams();
@@ -30,11 +31,11 @@ function Participants() {
         return;
       }
 
-      const eventRes = await axios.get(`http://localhost:5001/api/events/${eventId}`);
+      const eventRes = await axios.get(`${API_URL}/events/${eventId}`);
       setEventTitle(eventRes.data.title || 'Event');
 
       const res = await axios.get(
-        `http://localhost:5001/api/registrations/event/${eventId}/participants`,
+        `${API_URL}/registrations/event/${eventId}/participants`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -61,7 +62,7 @@ function Participants() {
       const token = sessionStorage.getItem('token');
 
       await axios.put(
-        `http://localhost:5001/api/registrations/organizer/registration/${registrationId}/status`,
+        `${API_URL}/registrations/organizer/registration/${registrationId}/status`,
         { status: newStatus },
         {
           headers: {
@@ -86,7 +87,7 @@ function Participants() {
       const token = sessionStorage.getItem('token');
 
       await axios.delete(
-        `http://localhost:5001/api/registrations/organizer/registration/${registrationId}`,
+        `${API_URL}/registrations/organizer/registration/${registrationId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
