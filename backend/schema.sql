@@ -15,6 +15,10 @@ CREATE TABLE app_events (
     event_time TIME NOT NULL,
     venue VARCHAR(200),
     organizer_id INTEGER REFERENCES app_users(id) ON DELETE CASCADE,
+    poster_url VARCHAR(500),
+    latitude NUMERIC,
+    longitude NUMERIC,
+    status VARCHAR(20) DEFAULT 'Upcoming',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
