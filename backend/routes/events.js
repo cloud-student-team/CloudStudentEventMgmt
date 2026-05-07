@@ -2,6 +2,7 @@ const express = require('express');
 const pool = require('../config/db');
 const authMiddleware = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
+const { getFileUrl } = require('../middleware/uploadMiddleware');
 
 const router = express.Router();
 
@@ -108,7 +109,7 @@ router.post('/', authMiddleware, requireOrganiser, upload.single('poster'), asyn
       });
     }
 
-    const poster_url = req.file ? `/uploads/${req.file.filename}` : null;
+    const poster_url = getFileUrl(req.file);
 
     const newEvent = await pool.query(
       `INSERT INTO app_events
@@ -175,7 +176,7 @@ router.put('/:id', authMiddleware, requireOrganiser, upload.single('poster'), as
       });
     }
 
-    const poster_url = req.file ? `/uploads/${req.file.filename}` : event.poster_url;
+    const poster_url = req.file ? getFileUrl(req.file) : event.poster_url;
 
     const updatedEvent = await pool.query(
       `UPDATE app_events
