@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import API_URL from '../config/api';
 
 function EventDetails() {
   const { id } = useParams();
@@ -25,7 +26,7 @@ function EventDetails() {
     const fetchEventDetails = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5001/api/events/${id}`
+          `${API_URL}/events/${id}`
         );
         setEvent(res.data);
       } catch (error) {
@@ -41,7 +42,7 @@ function EventDetails() {
         if (!token) return;
 
         const res = await axios.get(
-          'http://localhost:5001/api/registrations/my/events',
+          '${API_URL}/registrations/my/events',
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -61,7 +62,7 @@ function EventDetails() {
   const joinEvent = async () => {
     try {
       await axios.post(
-        `http://localhost:5001/api/registrations/${id}`,
+        `${API_URL}/registrations/${id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

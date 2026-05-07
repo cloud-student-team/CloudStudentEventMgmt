@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import API_URL from '../config/api';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -22,7 +23,7 @@ function Register() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/register', formData);
+      const response = await axios.post('${API_URL}/auth/register', formData);
       toast.success(response.data.message || '🎉 Registration successful!');
       setFormData({
         name: '',

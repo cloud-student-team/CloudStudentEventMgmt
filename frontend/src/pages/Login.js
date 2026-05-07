@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import API_URL from '../config/api';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const res = await axios.post('http://localhost:5001/api/auth/login', formData);
+      const res = await axios.post('${API_URL}/auth/login', formData);
       sessionStorage.setItem('token', res.data.token);
       sessionStorage.setItem('user', JSON.stringify(res.data.user));
       toast.success('✅ Login successful');

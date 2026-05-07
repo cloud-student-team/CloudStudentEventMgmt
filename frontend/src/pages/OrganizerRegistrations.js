@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
+import API_URL from '../config/api';
 
 function OrganizerRegistrations() {
   const [registrations, setRegistrations] = useState([]);
@@ -27,7 +28,7 @@ function OrganizerRegistrations() {
         return;
       }
 
-      const res = await axios.get('http://localhost:5001/api/registrations/organizer/all', {
+      const res = await axios.get('${API_URL}/registrations/organizer/all', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import API_URL from '../config/api';
 
 function Events() {
   const [events, setEvents] = useState([]);
@@ -22,7 +23,7 @@ function Events() {
 
   const fetchEvents = async () => {
     try {
-      const res = await axios.get('http://localhost:5001/api/events');
+      const res = await axios.get('${API_URL}/events');
       setEvents(res.data);
     } catch (error) {
       console.error(error);
@@ -37,7 +38,7 @@ function Events() {
         setJoinedEventIds([]);
         return;
       }
-      const res = await axios.get('http://localhost:5001/api/registrations/my/events', {
+      const res = await axios.get('${API_URL}/registrations/my/events', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setJoinedEventIds(res.data.map((event) => event.id));
@@ -55,7 +56,7 @@ function Events() {
         return;
       }
       await axios.post(
-        `http://localhost:5001/api/registrations/${eventId}`,
+        `${API_URL}/registrations/${eventId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -89,7 +90,7 @@ function Events() {
   const updateEvent = async (eventId) => {
     try {
       const token = sessionStorage.getItem('token');
-      await axios.put(`http://localhost:5001/api/events/${eventId}`, editForm, {
+      await axios.put(`${API_URL}/events/${eventId}`, editForm, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success('✅ Event updated successfully');
@@ -106,7 +107,7 @@ function Events() {
 
     try {
       const token = sessionStorage.getItem('token');
-      await axios.delete(`http://localhost:5001/api/events/${eventId}`, {
+      await axios.delete(`${API_URL}/events/${eventId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success('🗑️ Event deleted successfully');
