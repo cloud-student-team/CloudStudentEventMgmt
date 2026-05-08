@@ -21,4 +21,4 @@ A full-stack web application for managing student events.
 4. Run frontend: `cd frontend && npm install && npm start`
 
 ## Deployment
-CI/CD is handled via GitHub Actions. Push to `main` triggers automatic deployment to Azure App Service. Azure App Settings and GitHub Secrets must be configured first.
+CI/CD is handled via GitHub Actions. Pushing changes to `backend/` or `frontend/` on `main` triggers automatic deployment of the affected app to Azure App Service. Azure App Settings and GitHub Secrets must be configured first.

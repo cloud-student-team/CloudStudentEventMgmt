@@ -2,7 +2,7 @@ name: Deploy Frontend to Azure
 on:
   push:
     branches: [main]
-    paths: ['frontend/**']
+    paths: ['frontend/**', '.github/workflows/deploy-frontend.yml']
   workflow_dispatch:
 jobs:
   build-and-deploy:
