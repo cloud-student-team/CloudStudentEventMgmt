@@ -17,6 +17,7 @@ jobs:
       - run: npm run build
         working-directory: ./frontend
         env:
+          CI: "false"
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
       - run: |
           cat > build/server.js << 'EOF'
