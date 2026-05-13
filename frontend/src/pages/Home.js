@@ -33,7 +33,7 @@ function Home() {
               </Link>
             )}
             {user && user.role === 'student' && (
-              <Link to="/my-events" className="btn btn-light-outline">
+              <Link to="/my/events" className="btn btn-light-outline">
                 My Registrations
               </Link>
             )}
@@ -122,7 +122,7 @@ function Home() {
             <div className="card-icon">📝</div>
             <h3>My Registrations</h3>
             <p>Track joined events and manage attendance from your personalised dashboard.</p>
-            <Link to="/my-events" className="btn btn-secondary">
+            <Link to="/my/events" className="btn btn-secondary">
               My Events
             </Link>
           </div>

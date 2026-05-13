@@ -48,8 +48,8 @@ function Navbar({ user, setUser }) {
 
         {user && user.role === 'student' && (
           <>
-            <Link to="/my-events">My Events</Link>
-            <Link to="/my-registrations">My Registrations</Link>
+            <Link to="/my/events">My Events</Link>
+            <Link to="/my/registrations">My Registrations</Link>
           </>
         )}
 
