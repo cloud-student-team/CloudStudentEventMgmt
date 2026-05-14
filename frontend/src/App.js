@@ -126,6 +126,13 @@ function AppContent() {
           />
 
           <Route
+            path="/events/:id"
+            element={
+              <EventDetails />
+            }
+          />
+
+          <Route
             path="/my/registrations"
             element={
               <ProtectedRoute allowedRoles={['student']}>
