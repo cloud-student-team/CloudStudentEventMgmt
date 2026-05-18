@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
@@ -11,7 +11,7 @@ function OrganizerRegistrations() {
   const [statusFilter, setStatusFilter] = useState('All');
   const navigate = useNavigate();
 
-  const fetchRegistrations = async () => {
+  const fetchRegistrations = useCallback(async () => {
     try {
       const token = sessionStorage.getItem('token');
       const user = JSON.parse(sessionStorage.getItem('user'));
@@ -41,12 +41,11 @@ function OrganizerRegistrations() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchRegistrations();
-  }, []);
+  }, [fetchRegistrations]);
 
   const filteredRegistrations = useMemo(() => {
     return registrations.filter((item) => {

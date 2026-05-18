@@ -33,10 +33,15 @@ function Home() {
               </Link>
             )}
             {user && user.role === 'student' && (
-              <Link to="/my/events" className="btn btn-light-outline">
-                My Registrations
-              </Link>
-            )}
+  <>
+    <Link to="/my/events" className="btn btn-light-outline">
+      My Events
+    </Link>
+    <Link to="/my/registrations" className="btn btn-light-outline">
+      My Registrations
+    </Link>
+  </>
+)}
             {user && isOrganizer && (
               <>
                 <Link to="/create-event" className="btn btn-light-outline">

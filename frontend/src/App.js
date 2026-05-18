@@ -15,6 +15,8 @@ import Profile from './pages/Profile';
 import EventDetails from './pages/EventDetails';
 import ProtectedRoute from './components/ProtectedRoute';
 import MyRegistrations from './pages/MyRegistrations';
+import AdminUsers from './pages/AdminUsers';
+
 
 function Navbar({ user, setUser }) {
   const navigate = useNavigate();
@@ -60,6 +62,9 @@ function Navbar({ user, setUser }) {
           </>
         )}
 
+        {user && user.role === 'admin' && (
+          <Link to="/admin/users">Manage Users</Link>
+        )}
         {user && (
           <>
             <span className="welcome-text">Hi, {user.name}</span>
@@ -74,7 +79,10 @@ function Navbar({ user, setUser }) {
 }
 
 function AppContent() {
-  const [user, setUser] = useState(null);
+  //const [user, setUser] = useState(null);
+
+  const storedUser = sessionStorage.getItem('user');
+  const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
 
   useEffect(() => {
     const syncUser = () => {
@@ -103,9 +111,7 @@ function AppContent() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/events" element={<Events />} />
-       
-        
-
+          <Route path="/events/:id" element={<EventDetails />} />
 
           <Route
             path="/profile"
@@ -164,6 +170,15 @@ function AppContent() {
             element={
               <ProtectedRoute allowedRoles={['organiser', 'organizer']}>
                 <OrganizerRegistrations />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminUsers />
               </ProtectedRoute>
             }
           />

@@ -26,7 +26,12 @@ function Login() {
       sessionStorage.setItem('user', JSON.stringify(res.data.user));
       toast.success('✅ Login successful');
       setTimeout(() => {
-        window.location.href = '/';
+        // window.location.href = '/';
+        if (res.data.user.role === 'admin') {
+          window.location.href = '/admin/users';
+        } else {
+          window.location.href = '/';
+        }
       }, 900);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Login failed');
