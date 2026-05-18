@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../config/api';
 
 function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -11,7 +12,7 @@ function AdminUsers() {
 
   const fetchUsers = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5001/api/admin/users', {
+      const res = await axios.get(`${API_URL}/admin/users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(res.data);
@@ -27,7 +28,7 @@ function AdminUsers() {
   const changeRole = async (userId, role) => {
     try {
       await axios.put(
-        `http://localhost:5001/api/admin/users/${userId}/role`,
+        `${API_URL}/admin/users/${userId}/role`,
         { role },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -41,7 +42,7 @@ function AdminUsers() {
   const deleteUser = async (userId) => {
     if (!window.confirm('Delete this user?')) return;
     try {
-      await axios.delete(`http://localhost:5001/api/admin/users/${userId}`, {
+      await axios.delete(`${API_URL}/admin/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success('User deleted');
