@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import API_URL from '../config/api';
+import API_URL, { getPosterUrl } from '../config/api';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -177,7 +177,7 @@ function EventDetails() {
       {event.poster_url && (
         <div className="card" style={{ padding: 0, overflow: 'hidden', borderRadius: 24 }}>
           <img
-            src={event.poster_url}
+            src={getPosterUrl(event.poster_url)}
             alt={`${event.title} poster`}
             style={{ width: '100%', maxHeight: 380, objectFit: 'cover', display: 'block' }}
           />
