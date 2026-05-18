@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import API_URL from '../config/api';
+import API_URL, { getPosterUrl } from '../config/api';
 
 function Events() {
   const [events, setEvents] = useState([]);
@@ -207,7 +207,7 @@ function Events() {
           <>
             {event.poster_url && (
               <img
-                src={event.poster_url}
+                src={getPosterUrl(event.poster_url)}
                 alt={`${event.title} poster`}
                 style={{
                   width: '100%', height: '180px', objectFit: 'cover',
