@@ -40,13 +40,9 @@ function EventDetails() {
 
     const fetchEventDetails = async () => {
       try {
-<<<<<<< Updated upstream
         const res = await axios.get(
           `${API_URL}/events/${id}`
         );
-=======
-        const res = await axios.get(`http://localhost:5001/api/events/${id}`);
->>>>>>> Stashed changes
         setEvent(res.data);
       } catch (error) {
         console.error(error);
@@ -60,15 +56,10 @@ function EventDetails() {
       try {
         if (!token) return;
         const res = await axios.get(
-<<<<<<< Updated upstream
           `${API_URL}/registrations/my/events`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
-=======
-          'http://localhost:5001/api/registrations/my/events',
-          { headers: { Authorization: `Bearer ${token}` } }
->>>>>>> Stashed changes
         );
         const joinedIds = res.data.map((e) => e.id);
         setAlreadyJoined(joinedIds.includes(Number(id)));
