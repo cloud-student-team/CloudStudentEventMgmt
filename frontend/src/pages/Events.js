@@ -67,6 +67,21 @@ function Events() {
     }
   };
 
+  const leaveEvent = async (eventId) => {
+    try {
+      const token = sessionStorage.getItem('token');
+      if (!token) return;
+      await axios.delete(
+        `http://localhost:5001/api/registrations/${eventId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success('You have left the event.');
+      fetchJoinedEvents();
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Could not leave event');
+    }
+  };
+
   const startEdit = (event) => {
     setEditingEventId(event.id);
     setEditForm({
@@ -190,6 +205,16 @@ function Events() {
           </>
         ) : (
           <>
+            {event.poster_url && (
+              <img
+                src={`http://localhost:5001${event.poster_url}`}
+                alt={`${event.title} poster`}
+                style={{
+                  width: '100%', height: '180px', objectFit: 'cover',
+                  borderRadius: '12px', marginBottom: '12px', display: 'block',
+                }}
+              />
+            )}
             <div className="event-badge-row">
               <span className="event-badge primary">{event.event_date?.split('T')[0] || 'Date TBA'}</span>
               <span className="event-badge muted">{event.event_time || 'Time TBA'}</span>
@@ -206,13 +231,21 @@ function Events() {
                   <button className="btn btn-danger" onClick={() => deleteEvent(event.id)}>Delete Event</button>
                   <Link to={`/participants/${event.id}`} className="btn btn-light-outline link-btn">View Participants</Link>
                 </>
+              ) : !user ? (
+                <Link to="/login" className="btn btn-secondary link-btn">Login to Join</Link>
+              ) : alreadyJoined ? (
+                <button
+                  className="btn btn-danger"
+                  onClick={() => leaveEvent(event.id)}
+                >
+                  Leave Event
+                </button>
               ) : (
                 <button
-                  className={`btn ${alreadyJoined ? 'btn-disabled' : 'btn-secondary'}`}
+                  className="btn btn-secondary"
                   onClick={() => joinEvent(event.id)}
-                  disabled={alreadyJoined}
                 >
-                  {alreadyJoined ? 'Already Joined' : 'Join Event'}
+                  Join Event
                 </button>
               )}
             </div>

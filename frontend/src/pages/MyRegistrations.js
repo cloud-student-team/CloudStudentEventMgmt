@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -10,7 +10,7 @@ function MyRegistrations() {
 
   const token = sessionStorage.getItem('token');
 
-  const fetchMyRegistrations = async () => {
+  const fetchMyRegistrations = useCallback(async () => {
     try {
       const res = await axios.get(`${API_URL}/registrations/my/events`, {
         headers: {
@@ -26,12 +26,9 @@ function MyRegistrations() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   const cancelRegistration = async (eventId) => {
-    const confirmed = window.confirm('Cancel this registration?');
-    if (!confirmed) return;
-
     try {
       await axios.delete(`${API_URL}/registrations/${eventId}`, {
         headers: {
@@ -39,16 +36,17 @@ function MyRegistrations() {
         },
       });
 
-      toast.success('Registration cancelled');
-      setRegistrations((prev) => prev.filter((item) => item.id !== eventId));
+      toast.success('Registration cancelled successfully');
+      fetchMyRegistrations();
     } catch (error) {
+      console.error('Cancel registration error:', error);
       toast.error(error.response?.data?.message || 'Could not cancel registration');
     }
   };
 
   useEffect(() => {
     fetchMyRegistrations();
-  }, []);
+  }, [fetchMyRegistrations]);
 
   if (loading) {
     return <div className="card empty-state">Loading your registrations...</div>;
@@ -81,7 +79,7 @@ function MyRegistrations() {
 
             <tbody>
               {registrations.map((item) => (
-                <tr key={item.id}>
+                <tr key={item.registration_id || item.id}>
                   <td>{item.title}</td>
                   <td>{item.event_date?.split('T')[0] || 'Date TBA'}</td>
                   <td>{item.event_time || 'Time TBA'}</td>
@@ -89,7 +87,7 @@ function MyRegistrations() {
                   <td>{item.status || 'Registered'}</td>
                   <td>
                     <Link
-                      to={`/events/${item.id}`}
+                      to={`/events/${item.event_id || item.id}`}
                       className="btn btn-primary link-btn"
                     >
                       View
@@ -97,7 +95,7 @@ function MyRegistrations() {
 
                     <button
                       className="btn btn-danger"
-                      onClick={() => cancelRegistration(item.id)}
+                      onClick={() => cancelRegistration(item.event_id || item.id)}
                       style={{ marginLeft: '8px' }}
                     >
                       Cancel

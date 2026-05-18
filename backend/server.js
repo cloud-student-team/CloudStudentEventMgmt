@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth');
 const eventRoutes = require('./routes/events');
 const userRoutes = require('./routes/users');
 const registrationRoutes = require('./routes/registrations');
+const adminRoutes = require('./routes/admin');
 
 const corsOptions = {
   origin: process.env.CORS_ORIGIN,
@@ -23,6 +24,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/registrations', registrationRoutes);
+app.use('/api/admin', adminRoutes); 
 
 app.get('/', (req, res) => {
   res.send('Cloud Student Event Management API is running');

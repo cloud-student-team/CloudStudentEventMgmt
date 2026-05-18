@@ -192,15 +192,15 @@ router.put('/:id', authMiddleware, requireOrganiser, upload.single('poster'), as
        WHERE id = $10
        RETURNING *`,
       [
-        title,
-        description || null,
-        event_date,
-        event_time,
-        venue || null,
+        title !== undefined ? title : event.title,
+        description !== undefined ? description : event.description,
+        event_date !== undefined ? event_date : event.event_date,
+        event_time !== undefined ? event_time : event.event_time,
+        venue !== undefined ? venue : event.venue,
         poster_url,
-        latitude || null,
-        longitude || null,
-        status || 'Upcoming',
+        latitude !== undefined ? latitude : event.latitude,
+        longitude !== undefined ? longitude : event.longitude,
+        status !== undefined ? status : event.status,
         id,
       ]
     );

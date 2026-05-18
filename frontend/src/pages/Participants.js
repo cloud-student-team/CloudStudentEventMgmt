@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -14,7 +14,7 @@ function Participants() {
   const [statusFilter, setStatusFilter] = useState('All');
   const [search, setSearch] = useState('');
 
-  const fetchParticipants = async () => {
+  const fetchParticipants = useCallback(async () => {
     try {
       const token = sessionStorage.getItem('token');
       const user = JSON.parse(sessionStorage.getItem('user'));
@@ -50,12 +50,11 @@ function Participants() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [eventId, navigate]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchParticipants();
-  }, [eventId]);
+  }, [fetchParticipants]);
 
   const handleStatusChange = async (registrationId, newStatus) => {
     try {

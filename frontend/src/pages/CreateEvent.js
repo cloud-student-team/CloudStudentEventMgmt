@@ -3,6 +3,16 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import API_URL from '../config/api';
+import LocationPicker from '../components/LocationPicker';
+import L from 'leaflet';
+
+// Fix Leaflet default marker icons (Webpack bundling issue)
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
 
 function CreateEvent() {
   const [formData, setFormData] = useState({
@@ -324,6 +334,14 @@ function CreateEvent() {
                 value={formData.longitude}
                 onChange={handleChange}
               />
+            </div>
+
+            <div className="premium-field full-span">
+              <label className="form-label">Pin Location on Map</label>
+              <p style={{ margin: '0 0 8px', fontSize: '0.85rem', color: 'var(--muted)' }}>
+                Click on the map to set precise coordinates, or use "Get Coordinates" above.
+              </p>
+              <LocationPicker formData={formData} setFormData={setFormData} />
             </div>
 
             <div className="premium-field">
