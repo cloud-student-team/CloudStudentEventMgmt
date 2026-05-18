@@ -1,22 +1,18 @@
-const multer = require('multer');
-const path = require('path');
 require('dotenv').config();
+const multer = require('multer');
 
-let storage;
-let getFileUrl;
-
-// Use Azure if credentials exist, otherwise fall back to local
-if (
-  process.env.AZURE_STORAGE_CONNECTION_STRING &&
+const hasAzure = !!(
   process.env.AZURE_STORAGE_ACCOUNT &&
   process.env.AZURE_STORAGE_ACCESS_KEY &&
   process.env.AZURE_CONTAINER_NAME
-) {
-  // ✅ Azure Storage (Production)
+);
+
+let storage;
+
+if (hasAzure) {
   const { MulterAzureStorage } = require('multer-azure-blob-storage');
 
   storage = new MulterAzureStorage({
-    connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING,
     accountName: process.env.AZURE_STORAGE_ACCOUNT,
     accessKey: process.env.AZURE_STORAGE_ACCESS_KEY,
     containerName: process.env.AZURE_CONTAINER_NAME,
@@ -28,28 +24,19 @@ if (
       });
     },
   });
-
-  getFileUrl = (file) => {
-    if (!file) return null;
-    return file.url;
-  };
-
 } else {
-  // ✅ Local Storage (Development fallback)
-  console.log('⚠️  Azure credentials not found — using local storage for uploads');
+  const fs = require('fs');
+  const path = require('path');
+  const uploadsDir = path.join(__dirname, '..', 'uploads');
+  fs.mkdirSync(uploadsDir, { recursive: true });
 
   storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, 'uploads/'),
+    destination: path.join(__dirname, '..', 'uploads'),
     filename: (req, file, cb) => {
       const uniqueName = Date.now() + '-' + file.originalname.replace(/\s+/g, '_');
       cb(null, uniqueName);
-    }
+    },
   });
-
-  getFileUrl = (file) => {
-    if (!file) return null;
-    return `http://localhost:5001/uploads/${file.filename}`;
-  };
 }
 
 const fileFilter = (req, file, cb) => {
@@ -66,6 +53,12 @@ const upload = multer({
   fileFilter,
   limits: { fileSize: 5 * 1024 * 1024 },
 });
+
+function getFileUrl(file) {
+  if (!file) return null;
+  if (hasAzure) return file.url;
+  return `/uploads/${file.filename}`;
+}
 
 module.exports = upload;
 module.exports.getFileUrl = getFileUrl;
