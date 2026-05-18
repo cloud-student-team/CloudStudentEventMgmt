@@ -71,8 +71,8 @@ function Events() {
     try {
       const token = sessionStorage.getItem('token');
       if (!token) return;
-      await axios.delete(
-        `http://localhost:5001/api/registrations/${eventId}`,
+        await axios.delete(
+          `${API_URL}/registrations/${eventId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success('You have left the event.');
@@ -207,7 +207,7 @@ function Events() {
           <>
             {event.poster_url && (
               <img
-                src={`http://localhost:5001${event.poster_url}`}
+                src={event.poster_url}
                 alt={`${event.title} poster`}
                 style={{
                   width: '100%', height: '180px', objectFit: 'cover',

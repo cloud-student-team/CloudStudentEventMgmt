@@ -98,8 +98,8 @@ function EventDetails() {
     if (!token) return;
     setLeaving(true);
     try {
-      await axios.delete(
-        `http://localhost:5001/api/registrations/${id}`,
+        await axios.delete(
+          `${API_URL}/registrations/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success('You have left the event.');
@@ -115,8 +115,8 @@ function EventDetails() {
     const confirmed = window.confirm('Are you sure you want to delete this event?');
     if (!confirmed) return;
     try {
-      await axios.delete(
-        `http://localhost:5001/api/events/${id}`,
+        await axios.delete(
+          `${API_URL}/events/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success('🗑️ Event deleted');
@@ -177,7 +177,7 @@ function EventDetails() {
       {event.poster_url && (
         <div className="card" style={{ padding: 0, overflow: 'hidden', borderRadius: 24 }}>
           <img
-            src={`http://localhost:5001${event.poster_url}`}
+            src={event.poster_url}
             alt={`${event.title} poster`}
             style={{ width: '100%', maxHeight: 380, objectFit: 'cover', display: 'block' }}
           />
