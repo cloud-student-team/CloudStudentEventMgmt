@@ -55,12 +55,8 @@ function Register() {
 
         <div className="auth-points">
           <div className="auth-point">
-            <strong>Student account</strong>
-            Join events quickly and keep all your registrations in one place.
-          </div>
-          <div className="auth-point">
-            <strong>Organiser account</strong>
-            Create and manage events, participants, and announcements efficiently.
+            <strong>Join as a Student</strong>
+            Browse and join campus events. Your role can be upgraded by an Admin.
           </div>
         </div>
       </div>
@@ -102,12 +98,6 @@ function Register() {
             onChange={handleChange}
             required
           />
-
-          <label className="form-label">Role</label>
-          <select className="select" name="role" value={formData.role} onChange={handleChange}>
-            <option value="student">Student</option>
-            <option value="organiser">Organiser</option>
-          </select>
 
           <button className="btn btn-primary" type="submit">
             Create Account
