@@ -56,7 +56,10 @@ const upload = multer({
 
 function getFileUrl(file) {
   if (!file) return null;
-  if (hasAzure) return file.url;
+  if (hasAzure) {
+    const blobUrl = file.url ? file.url.split('?')[0] : null;
+    return blobUrl;
+  }
   return `/uploads/${file.filename}`;
 }
 
