@@ -1107,36 +1107,3 @@ a {
     padding: 0 14px 28px;
   }
 }
-
-/* ── Mobile Nav Fix ── */
-@media (max-width: 640px) {
-  .navbar {
-    padding: 10px 14px;
-    gap: 8px;
-  }
-
-  .nav-links {
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-
-  .nav-links a,
-  .nav-links button,
-  .welcome-text {
-    width: auto;
-    padding: 7px 10px;
-    font-size: 0.82rem;
-  }
-
-  .welcome-text {
-    width: 100%;
-    padding: 4px 6px;
-    font-size: 0.82rem;
-  }
-
-  .page-container {
-    margin-top: 16px;
-  }
-}
