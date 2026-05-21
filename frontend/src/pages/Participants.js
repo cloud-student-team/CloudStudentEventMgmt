@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import API_URL from '../config/api';
+import SendAnnouncement from '../components/SendAnnouncement';
 
 function Participants() {
   const { eventId } = useParams();
@@ -276,6 +277,11 @@ function Participants() {
           </div>
         </div>
       )}
+      <SendAnnouncement
+        eventId={eventId}
+        eventTitle={eventTitle}
+        participantCount={participants.length}
+      />
     </div>
   );
 }

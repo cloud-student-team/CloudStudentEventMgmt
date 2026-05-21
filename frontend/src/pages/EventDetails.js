@@ -163,8 +163,8 @@ function EventDetails() {
     ? event.event_time.slice(0, 5)
     : 'Time TBA';
 
-  const isEventOwner =
-    user && isOrganizer && user.id === event.organizer_id;
+const isEventOwner =
+  user && isOrganizer && Number(user.id) === Number(event.organizer_id);
 
   const lat = event.latitude ? parseFloat(event.latitude) : null;
   const lng = event.longitude ? parseFloat(event.longitude) : null;

@@ -29,9 +29,7 @@ function OrganizerRegistrations() {
       }
 
       const res = await axios.get(`${API_URL}/registrations/organizer/all`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       setRegistrations(res.data);
@@ -67,6 +65,42 @@ function OrganizerRegistrations() {
     cancelled: registrations.filter((item) => item.status === 'Cancelled').length,
   }), [registrations]);
 
+  const handleExportCSV = () => {
+    if (!filteredRegistrations.length) {
+      toast.info('No registrations to export');
+      return;
+    }
+    const headers = [
+      'Event',
+      'Date',
+      'Time',
+      'Venue',
+      'Student Name',
+      'Student Email',
+      'Status',
+      'Registered At',
+    ];
+    const rows = filteredRegistrations.map((item) => [
+      `"${item.event_title || ''}"`,
+      `"${item.event_date?.split('T')[0] || ''}"`,
+      `"${item.event_time || ''}"`,
+      `"${item.venue || ''}"`,
+      `"${item.student_name || ''}"`,
+      `"${item.student_email || ''}"`,
+      `"${item.status || ''}"`,
+      `"${item.registered_at ? new Date(item.registered_at).toLocaleString() : ''}"`,
+    ]);
+    const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'all_registrations.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('✅ CSV exported successfully!');
+  };
+
   if (loading) {
     return <div className="card empty-state">Loading registrations...</div>;
   }
@@ -89,6 +123,9 @@ function OrganizerRegistrations() {
             <Link to="/events" className="btn btn-light-outline link-btn">
               Events Directory
             </Link>
+            <button className="btn btn-secondary" onClick={handleExportCSV}>
+              ⬇️ Export CSV
+            </button>
           </div>
         </div>
 
@@ -125,6 +162,11 @@ function OrganizerRegistrations() {
             Home
           </Link>
         </div>
+        {/* Export note */}
+        <p style={{ margin: '10px 0 0', fontSize: '0.85rem', color: '#64748b' }}>
+          Showing <strong>{filteredRegistrations.length}</strong> of <strong>{registrations.length}</strong> registrations.
+          {statusFilter !== 'All' || search ? ' Export will only include filtered results.' : ''}
+        </p>
       </section>
 
       {filteredRegistrations.length === 0 ? (
@@ -142,6 +184,7 @@ function OrganizerRegistrations() {
                   <th>Student</th>
                   <th>Email</th>
                   <th>Status</th>
+                  <th>Registered At</th>
                 </tr>
               </thead>
               <tbody>
@@ -171,6 +214,11 @@ function OrganizerRegistrations() {
                       <span className={`status-pill ${String(item.status || '').toLowerCase()}`}>
                         {item.status}
                       </span>
+                    </td>
+                    <td style={{ fontSize: '0.85rem', color: '#64748b' }}>
+                      {item.registered_at
+                        ? new Date(item.registered_at).toLocaleDateString()
+                        : '-'}
                     </td>
                   </tr>
                 ))}
