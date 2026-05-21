@@ -31,6 +31,16 @@ CREATE TABLE app_registrations (
     UNIQUE(user_id, event_id)
 );
 
+CREATE TABLE app_notifications (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES app_users(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    type VARCHAR(50) DEFAULT 'reminder',
+    event_id INTEGER REFERENCES app_events(id) ON DELETE CASCADE,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-
-
+CREATE INDEX idx_notifications_user_id ON app_notifications(user_id);
+CREATE INDEX idx_notifications_is_read ON app_notifications(is_read);
