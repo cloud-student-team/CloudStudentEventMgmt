@@ -6,7 +6,6 @@ const { getFileUrl } = upload;
 
 const router = express.Router();
 
-
 // Helper: organiser-only access
 const requireOrganiser = (req, res, next) => {
   if (req.user.role !== 'organiser' && req.user.role !== 'organizer') {
@@ -17,7 +16,7 @@ const requireOrganiser = (req, res, next) => {
   next();
 };
 
-// GET all events
+// GET all events — now includes registration_count and created_at
 router.get('/', async (req, res) => {
   try {
     const result = await pool.query(
@@ -33,12 +32,15 @@ router.get('/', async (req, res) => {
           e.longitude,
           e.status,
           e.organizer_id,
-          u.name AS organizer_name
+          e.created_at,
+          u.name AS organizer_name,
+          COUNT(r.id) AS registration_count
        FROM app_events e
        LEFT JOIN app_users u ON e.organizer_id = u.id
+       LEFT JOIN app_registrations r ON e.id = r.event_id
+       GROUP BY e.id, u.name
        ORDER BY e.event_date ASC, e.event_time ASC`
     );
-
     res.json(result.rows);
   } catch (error) {
     console.error('Get all events error:', error);
@@ -53,7 +55,6 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-
     const result = await pool.query(
       `SELECT 
           e.id,
@@ -67,18 +68,20 @@ router.get('/:id', async (req, res) => {
           e.longitude,
           e.status,
           e.organizer_id,
+          e.created_at,
           u.name AS organizer_name,
-          u.email AS organizer_email
+          u.email AS organizer_email,
+          COUNT(r.id) AS registration_count
        FROM app_events e
        LEFT JOIN app_users u ON e.organizer_id = u.id
-       WHERE e.id = $1`,
+       LEFT JOIN app_registrations r ON e.id = r.event_id
+       WHERE e.id = $1
+       GROUP BY e.id, u.name, u.email`,
       [id]
     );
-
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Event not found' });
     }
-
     res.json(result.rows[0]);
   } catch (error) {
     console.error('Get event details error:', error);
@@ -92,25 +95,11 @@ router.get('/:id', async (req, res) => {
 // POST create event
 router.post('/', authMiddleware, requireOrganiser, upload.single('poster'), async (req, res) => {
   try {
-    const {
-      title,
-      description,
-      event_date,
-      event_time,
-      venue,
-      latitude,
-      longitude,
-      status,
-    } = req.body;
-
+    const { title, description, event_date, event_time, venue, latitude, longitude, status } = req.body;
     if (!title || !event_date || !event_time) {
-      return res.status(400).json({
-        message: 'Title, event date, and event time are required',
-      });
+      return res.status(400).json({ message: 'Title, event date, and event time are required' });
     }
-
     const poster_url = getFileUrl(req.file);
-
     const newEvent = await pool.query(
       `INSERT INTO app_events
        (title, description, event_date, event_time, venue, organizer_id, poster_url, latitude, longitude, status)
@@ -129,66 +118,31 @@ router.post('/', authMiddleware, requireOrganiser, upload.single('poster'), asyn
         status || 'Upcoming',
       ]
     );
-
-    res.status(201).json({
-      message: 'Event created successfully',
-      event: newEvent.rows[0],
-    });
+    res.status(201).json({ message: 'Event created successfully', event: newEvent.rows[0] });
   } catch (error) {
     console.error('Create event error:', error);
-    res.status(500).json({
-      message: 'Server error while creating event',
-      error: error.message,
-    });
+    res.status(500).json({ message: 'Server error while creating event', error: error.message });
   }
 });
-
 
 // PUT update event
 router.put('/:id', authMiddleware, requireOrganiser, upload.single('poster'), async (req, res) => {
   try {
     const { id } = req.params;
-    const {
-      title,
-      description,
-      event_date,
-      event_time,
-      venue,
-      latitude,
-      longitude,
-      status,
-    } = req.body;
-
-    const eventCheck = await pool.query(
-      'SELECT * FROM app_events WHERE id = $1',
-      [id]
-    );
-
+    const { title, description, event_date, event_time, venue, latitude, longitude, status } = req.body;
+    const eventCheck = await pool.query('SELECT * FROM app_events WHERE id = $1', [id]);
     if (eventCheck.rows.length === 0) {
       return res.status(404).json({ message: 'Event not found' });
     }
-
     const event = eventCheck.rows[0];
-
     if (event.organizer_id !== req.user.id) {
-      return res.status(403).json({
-        message: 'Not allowed to update this event',
-      });
+      return res.status(403).json({ message: 'Not allowed to update this event' });
     }
-
     const poster_url = req.file ? getFileUrl(req.file) : event.poster_url;
-
     const updatedEvent = await pool.query(
       `UPDATE app_events
-       SET title = $1,
-           description = $2,
-           event_date = $3,
-           event_time = $4,
-           venue = $5,
-           poster_url = $6,
-           latitude = $7,
-           longitude = $8,
-           status = $9
+       SET title = $1, description = $2, event_date = $3, event_time = $4,
+           venue = $5, poster_url = $6, latitude = $7, longitude = $8, status = $9
        WHERE id = $10
        RETURNING *`,
       [
@@ -204,17 +158,10 @@ router.put('/:id', authMiddleware, requireOrganiser, upload.single('poster'), as
         id,
       ]
     );
-
-    res.json({
-      message: 'Event updated successfully',
-      event: updatedEvent.rows[0],
-    });
+    res.json({ message: 'Event updated successfully', event: updatedEvent.rows[0] });
   } catch (error) {
     console.error('Update event error:', error);
-    res.status(500).json({
-      message: 'Server error while updating event',
-      error: error.message,
-    });
+    res.status(500).json({ message: 'Server error while updating event', error: error.message });
   }
 });
 
@@ -222,33 +169,19 @@ router.put('/:id', authMiddleware, requireOrganiser, upload.single('poster'), as
 router.delete('/:id', authMiddleware, requireOrganiser, async (req, res) => {
   try {
     const { id } = req.params;
-
-    const eventCheck = await pool.query(
-      'SELECT * FROM app_events WHERE id = $1',
-      [id]
-    );
-
+    const eventCheck = await pool.query('SELECT * FROM app_events WHERE id = $1', [id]);
     if (eventCheck.rows.length === 0) {
       return res.status(404).json({ message: 'Event not found' });
     }
-
     const event = eventCheck.rows[0];
-
     if (event.organizer_id !== req.user.id) {
-      return res.status(403).json({
-        message: 'Not allowed to delete this event',
-      });
+      return res.status(403).json({ message: 'Not allowed to delete this event' });
     }
-
     await pool.query('DELETE FROM app_events WHERE id = $1', [id]);
-
     res.json({ message: 'Event deleted successfully' });
   } catch (error) {
     console.error('Delete event error:', error);
-    res.status(500).json({
-      message: 'Server error while deleting event',
-      error: error.message,
-    });
+    res.status(500).json({ message: 'Server error while deleting event', error: error.message });
   }
 });
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
@@ -16,10 +17,25 @@ import EventDetails from './pages/EventDetails';
 import ProtectedRoute from './components/ProtectedRoute';
 import MyRegistrations from './pages/MyRegistrations';
 import AdminUsers from './pages/AdminUsers';
-
+import AdminRegistrations from './pages/AdminRegistrations';
+import OrganizerDashboard from './pages/OrganizerDashboard';
+import Notifications from './pages/Notifications';
+import API_URL from './config/api';
 
 function Navbar({ user, setUser }) {
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
+
+  // Fetch unread notification count
+  useEffect(() => {
+    if (!user) { setUnreadCount(0); return; }
+    const token = sessionStorage.getItem('token');
+    axios.get(`${API_URL}/notifications/unread-count`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(res => setUnreadCount(res.data.count))
+      .catch(() => { });
+  }, [user]);
 
   const handleLogout = () => {
     sessionStorage.removeItem('token');
@@ -28,15 +44,12 @@ function Navbar({ user, setUser }) {
     navigate('/login');
   };
 
-  const isOrganizer =
-    user && (user.role === 'organiser' || user.role === 'organizer');
+  const isOrganizer = user && (user.role === 'organiser' || user.role === 'organizer');
 
   return (
     <nav className="navbar">
       <div className="nav-brand">
-        <Link to="/" className="brand-link">
-          CloudEvents
-        </Link>
+        <Link to="/" className="brand-link">CloudEvents</Link>
       </div>
 
       <div className="nav-links">
@@ -59,18 +72,36 @@ function Navbar({ user, setUser }) {
           <>
             <Link to="/create-event">Create Event</Link>
             <Link to="/organizer-registrations">All Registrations</Link>
+            <Link to="/organizer-dashboard">Dashboard</Link>
           </>
         )}
 
         {user && user.role === 'admin' && (
           <Link to="/admin/users">Manage Users</Link>
         )}
+
+        {/* 🔔 Notification Bell */}
+        {user && (
+          <Link to="/notifications" style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
+            🔔
+            {unreadCount > 0 && (
+              <span style={{
+                position: 'absolute', top: '-6px', right: '-8px',
+                background: '#dc2626', color: 'white',
+                borderRadius: '50%', width: '18px', height: '18px',
+                fontSize: '0.68rem', fontWeight: 800,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </Link>
+        )}
+
         {user && (
           <>
             <span className="welcome-text">Hi, {user.name}</span>
-            <button className="btn btn-light" onClick={handleLogout}>
-              Logout
-            </button>
+            <button className="btn btn-light" onClick={handleLogout}>Logout</button>
           </>
         )}
       </div>
@@ -79,22 +110,17 @@ function Navbar({ user, setUser }) {
 }
 
 function AppContent() {
-  //const [user, setUser] = useState(null);
-
   const storedUser = sessionStorage.getItem('user');
   const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
 
   useEffect(() => {
     const syncUser = () => {
-      const storedUser = sessionStorage.getItem('user');
-      setUser(storedUser ? JSON.parse(storedUser) : null);
+      const stored = sessionStorage.getItem('user');
+      setUser(stored ? JSON.parse(stored) : null);
     };
-
     syncUser();
-
     window.addEventListener('storage', syncUser);
     window.addEventListener('focus', syncUser);
-
     return () => {
       window.removeEventListener('storage', syncUser);
       window.removeEventListener('focus', syncUser);
@@ -113,75 +139,45 @@ function AppContent() {
           <Route path="/events" element={<Events />} />
           <Route path="/events/:id" element={<EventDetails />} />
 
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/notifications" element={
+            <ProtectedRoute><Notifications /></ProtectedRoute>
+          } />
 
-          <Route
-            path="/my/events"
-            element={
-              <ProtectedRoute allowedRoles={['student']}>
-                <MyEvents />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/profile" element={
+            <ProtectedRoute><Profile /></ProtectedRoute>
+          } />
 
-          <Route
-            path="/events/:id"
-            element={
-              <EventDetails />
-            }
-          />
+          <Route path="/my/events" element={
+            <ProtectedRoute allowedRoles={['student']}><MyEvents /></ProtectedRoute>
+          } />
 
-          <Route
-            path="/my/registrations"
-            element={
-              <ProtectedRoute allowedRoles={['student']}>
-                <MyRegistrations />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/my/registrations" element={
+            <ProtectedRoute allowedRoles={['student']}><MyRegistrations /></ProtectedRoute>
+          } />
 
-          <Route
-            path="/create-event"
-            element={
-              <ProtectedRoute allowedRoles={['organiser', 'organizer']}>
-                <CreateEvent />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/create-event" element={
+            <ProtectedRoute allowedRoles={['organiser', 'organizer']}><CreateEvent /></ProtectedRoute>
+          } />
 
-          <Route
-            path="/participants/:eventId"
-            element={
-              <ProtectedRoute allowedRoles={['organiser', 'organizer']}>
-                <Participants />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/participants/:eventId" element={
+            <ProtectedRoute allowedRoles={['organiser', 'organizer']}><Participants /></ProtectedRoute>
+          } />
 
-          <Route
-            path="/organizer-registrations"
-            element={
-              <ProtectedRoute allowedRoles={['organiser', 'organizer']}>
-                <OrganizerRegistrations />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/organizer-registrations" element={
+            <ProtectedRoute allowedRoles={['organiser', 'organizer']}><OrganizerRegistrations /></ProtectedRoute>
+          } />
 
-          <Route
-            path="/admin/users"
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminUsers />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/organizer-dashboard" element={
+            <ProtectedRoute allowedRoles={['organiser', 'organizer']}><OrganizerDashboard /></ProtectedRoute>
+          } />
+
+          <Route path="/admin/users" element={
+            <ProtectedRoute allowedRoles={['admin']}><AdminUsers /></ProtectedRoute>
+          } />
+
+          <Route path="/admin/registrations" element={
+            <ProtectedRoute allowedRoles={['admin']}><AdminRegistrations /></ProtectedRoute>
+          } />
         </Routes>
       </main>
 
