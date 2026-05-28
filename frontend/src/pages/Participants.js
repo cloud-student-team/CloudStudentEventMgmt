@@ -28,7 +28,7 @@ function Participants() {
 
       if (user.role !== 'organiser' && user.role !== 'organizer') {
         toast.error('Only organisers can view participants');
-        navigate('/events');
+        navigate('/');
         return;
       }
 
@@ -168,7 +168,7 @@ function Participants() {
           </p>
 
           <div className="premium-hero-actions">
-            <Link to="/events" className="btn btn-light-outline link-btn">
+            <Link to="/" className="btn btn-light-outline link-btn">
               Back to Events
             </Link>
             <button className="btn btn-secondary" onClick={handleExportCSV}>

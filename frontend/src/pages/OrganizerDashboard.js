@@ -16,7 +16,7 @@ function OrganizerDashboard() {
     try {
       if (!token || !user) { navigate('/login'); return; }
       if (user.role !== 'organiser' && user.role !== 'organizer') {
-        navigate('/events'); return;
+        navigate('/'); return;
       }
 
       // Fetch all registrations for this organiser

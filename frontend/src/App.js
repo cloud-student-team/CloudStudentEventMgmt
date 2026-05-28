@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
-import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Events from './pages/Events';
@@ -57,7 +56,6 @@ function Navbar({ user, setUser }) {
         {!user && <Link to="/login">Login</Link>}
 
         <Link to="/">Home</Link>
-        <Link to="/events">Events</Link>
 
         {user && <Link to="/profile">Profile</Link>}
 
@@ -133,10 +131,10 @@ function AppContent() {
 
       <main className="page-container">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Events />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/events" element={<Events />} />
+          <Route path="/events" element={<Navigate to="/" replace />} />
           <Route path="/events/:id" element={<EventDetails />} />
 
           <Route path="/notifications" element={
