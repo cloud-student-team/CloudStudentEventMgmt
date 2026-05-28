@@ -406,7 +406,6 @@ function CreateEvent() {
             <span className="section-chip">Quick navigation</span>
             <h3 className="section-title">Move around the platform</h3>
             <div className="premium-nav-list">
-              <Link to="/" className="premium-nav-item">Home</Link>
               <Link to="/" className="premium-nav-item">Events Directory</Link>
               <Link to="/organizer-registrations" className="premium-nav-item">All Registrations</Link>
               <Link to="/profile" className="premium-nav-item">Profile</Link>
