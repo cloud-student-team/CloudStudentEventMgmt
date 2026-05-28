@@ -212,7 +212,7 @@ function Profile() {
             ) : registrations.length === 0 ? (
               <div className="empty-state">
                 <p>No registrations yet.</p>
-                <Link to="/events" className="btn btn-primary">Browse Events</Link>
+                <Link to="/" className="btn btn-primary">Browse Events</Link>
               </div>
             ) : (
               <div style={{ overflowX: 'auto' }}>
@@ -359,7 +359,7 @@ function Profile() {
                 {registrations.length === 0 && (
                   <div className="empty-state">
                     <p>No events in your timeline yet.</p>
-                    <Link to="/events" className="btn btn-primary">Browse Events</Link>
+                    <Link to="/" className="btn btn-primary">Browse Events</Link>
                   </div>
                 )}
               </>

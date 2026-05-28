@@ -132,7 +132,7 @@ function MyRegistrations() {
       {registrations.length === 0 ? (
         <div className="card empty-state">
           <p>You have not registered for any events yet.</p>
-          <Link to="/events" className="btn btn-primary">Browse Events</Link>
+          <Link to="/" className="btn btn-primary">Browse Events</Link>
         </div>
       ) : view === 'cards' ? (
         /* ── CARD VIEW ── */

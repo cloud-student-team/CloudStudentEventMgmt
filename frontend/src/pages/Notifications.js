@@ -118,7 +118,7 @@ function Notifications() {
         {filtered.length === 0 ? (
           <div className="card empty-state">
             <p>No notifications found.</p>
-            <Link to="/events" className="btn btn-primary">Browse Events</Link>
+            <Link to="/" className="btn btn-primary">Browse Events</Link>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>

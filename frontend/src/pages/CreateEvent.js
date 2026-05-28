@@ -46,7 +46,7 @@ function CreateEvent() {
 
     if (user.role !== 'organiser' && user.role !== 'organizer') {
       toast.error('Only organisers can create events');
-      navigate('/events');
+      navigate('/');
       return;
     }
 
@@ -158,7 +158,7 @@ function CreateEvent() {
       });
       setPoster(null);
 
-      navigate('/events');
+      navigate('/');
     } catch (error) {
       console.error('Create event error:', error);
       toast.error(error.response?.data?.message || 'Event creation failed');
@@ -190,7 +190,7 @@ function CreateEvent() {
           </p>
 
           <div className="premium-hero-actions">
-            <Link to="/events" className="btn btn-light-outline link-btn">
+            <Link to="/" className="btn btn-light-outline link-btn">
               Browse Events
             </Link>
             <Link to="/organizer-registrations" className="btn btn-secondary link-btn">
@@ -373,7 +373,7 @@ function CreateEvent() {
               <button className="btn btn-primary" type="submit" disabled={submitting}>
                 {submitting ? 'Publishing event...' : 'Create Event'}
               </button>
-              <Link to="/events" className="btn btn-light-outline link-btn">
+              <Link to="/" className="btn btn-light-outline link-btn">
                 Cancel
               </Link>
             </div>
@@ -406,8 +406,7 @@ function CreateEvent() {
             <span className="section-chip">Quick navigation</span>
             <h3 className="section-title">Move around the platform</h3>
             <div className="premium-nav-list">
-              <Link to="/" className="premium-nav-item">Home</Link>
-              <Link to="/events" className="premium-nav-item">Events Directory</Link>
+              <Link to="/" className="premium-nav-item">Events Directory</Link>
               <Link to="/organizer-registrations" className="premium-nav-item">All Registrations</Link>
               <Link to="/profile" className="premium-nav-item">Profile</Link>
             </div>

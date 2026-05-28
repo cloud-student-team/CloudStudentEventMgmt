@@ -120,7 +120,7 @@ function EventDetails() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success('🗑️ Event deleted');
-      navigate('/events');
+      navigate('/');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Could not delete event');
     }
@@ -144,7 +144,7 @@ function EventDetails() {
           <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>🔍</div>
           <h3 style={{ margin: '0 0 8px', color: 'var(--text)' }}>Event Not Found</h3>
           <p style={{ margin: '0 0 20px' }}>This event may have been removed or doesn't exist.</p>
-          <Link to="/events" className="btn btn-primary">Browse Events</Link>
+          <Link to="/" className="btn btn-primary">Browse Events</Link>
         </div>
       </div>
     );
@@ -212,7 +212,7 @@ const isEventOwner =
 
         {/* back link */}
         <Link
-          to="/events"
+          to="/"
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
             color: 'rgba(255,255,255,0.75)', fontSize: '0.9rem',

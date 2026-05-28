@@ -24,7 +24,7 @@ function OrganizerRegistrations() {
 
       if (user.role !== 'organiser' && user.role !== 'organizer') {
         toast.error('Only organisers can view registrations');
-        navigate('/events');
+        navigate('/');
         return;
       }
 
@@ -120,7 +120,7 @@ function OrganizerRegistrations() {
             <Link to="/create-event" className="btn btn-primary link-btn">
               Create Event
             </Link>
-            <Link to="/events" className="btn btn-light-outline link-btn">
+            <Link to="/" className="btn btn-light-outline link-btn">
               Events Directory
             </Link>
             <button className="btn btn-secondary" onClick={handleExportCSV}>
